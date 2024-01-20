@@ -74,8 +74,20 @@ describe('Testing todo Endpoints Foe a RESTFUL JSON API', () => {
 
         expect(response.statusCode).toBe(200)
         expect(response.body.msg).toEqual(`The todo with the Id of ${todo._id} was deleted from the MonogoDb database, no further action necessary.`)
-            
     }) 
+
+    test('It should show a pre-existing todo given a valid todo id', async () => {
+        const todo = new Todo({ title: 'test todo', description: 'test', completed: true })
+        await todo.save()
+
+        const response = await request(app).get(`/todos/${todo._id}`)
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body.title).toEqual('test todo')
+        expect(response.body.description).toEqual('test')
+        expect(response.body.completed).toBeTruthy()
+
+    })
 
     
 })
