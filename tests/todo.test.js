@@ -40,4 +40,18 @@ describe('Testing todo Endpoints Foe a RESTFUL JSON API', () => {
             expect(response.body[i]).toHaveProperty('createdAt')
         }
     }) 
+
+    test('It Should Create a New Todo', async () => {
+        const response = await request(app).post('/todos').send({
+            title: "test todo 1",
+            description: "What i got to do",
+            completed: false
+        })
+
+        expect(response.body.title).toEqual('test todo 1')
+        expect(response.body.description).toEqual('What i got to do')
+        expect(response.body.completed).toBeFalsy()
+    })
+
+    
 })
