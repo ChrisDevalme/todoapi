@@ -24,7 +24,7 @@ afterAll(async() => {
 })
 
 describe('Testing todo Endpoints Foe a RESTFUL JSON API', () => {
-    test('It Should display a lsit of Todos', async () => {
+    test('It Should display a list of Todos', async () => {
         const todo = new Todo({ title: 'test todo', description: 'test description', completed: false }) 
         await todo.save()
         
@@ -52,6 +52,30 @@ describe('Testing todo Endpoints Foe a RESTFUL JSON API', () => {
         expect(response.body.description).toEqual('What i got to do')
         expect(response.body.completed).toBeFalsy()
     })
+
+    test('Given a valid body it should update an existing todo and return it', async () => {
+        const todo = new Todo({ title: 'test todo', description: 'test description', completed: false }) 
+        await todo.save()
+        
+        const response = await request(app).put(`/todos/${todo._id}`).send({
+            description: 'This is how we do it'
+        })
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body.description).toEqual('This is how we do it')
+            
+    }) 
+
+    test('It should delete an pre-existing todo given a valid todo id', async () => {
+        const todo = new Todo({ title: 'test todo', description: 'test description', completed: false }) 
+        await todo.save()
+        
+        const response = await request(app).delete(`/todos/${todo._id}`)
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body.msg).toEqual(`The todo with the Id of ${todo._id} was deleted from the MonogoDb database, no further action necessary.`)
+            
+    }) 
 
     
 })
